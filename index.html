@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 민속씨름 대회 일정</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap');
+
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+  :root {
+    --bg: #f6f7fb;
+    --card: #ffffff;
+    --text: #1a1a2e;
+    --text-secondary: #6b7094;
+    --accent: #3b5bdb;
+    --accent-light: #edf2ff;
+    --accent-dark: #2b4acb;
+    --border: #e9ecf5;
+    --shadow: 0 2px 16px rgba(59,91,219,0.06);
+    --shadow-hover: 0 8px 32px rgba(59,91,219,0.12);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --month-1: #e8f5e9; --month-1-accent: #2e7d32; --month-1-badge: #43a047;
+    --month-2: #e3f2fd; --month-2-accent: #1565c0; --month-2-badge: #1e88e5;
+    --month-3: #fce4ec; --month-3-accent: #c62828; --month-3-badge: #e53935;
+    --month-4: #fff3e0; --month-4-accent: #e65100; --month-4-badge: #fb8c00;
+    --month-5: #e8eaf6; --month-5-accent: #283593; --month-5-badge: #3f51b5;
+    --month-6: #e0f7fa; --month-6-accent: #00695c; --month-6-badge: #00897b;
+    --month-7: #fbe9e7; --month-7-accent: #bf360c; --month-7-badge: #f4511e;
+    --month-8: #f3e5f5; --month-8-accent: #6a1b9a; --month-8-badge: #8e24aa;
+    --month-9: #e8f5e9; --month-9-accent: #2e7d32; --month-9-badge: #43a047;
+    --month-10: #fff8e1; --month-10-accent: #f57f17; --month-10-badge: #fbc02d;
+    --month-11: #e3f2fd; --month-11-accent: #0d47a1; --month-11-badge: #1976d2;
+    --month-12: #efebe9; --month-12-accent: #4e342e; --month-12-badge: #6d4c41;
+  }
+
+  html { scroll-behavior: smooth }
+
+  body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, #3b5bdb 0%, #5c7cfa 50%, #748ffc 100%);
+    color: #fff;
+    padding: 48px 20px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60%; left: -30%;
+    width: 160%; height: 200%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 40px;
+    background: var(--bg);
+    border-radius: 40px 40px 0 0;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .hero p {
+    font-size: 15px;
+    opacity: 0.85;
+    font-weight: 300;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* ── Stats strip ── */
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: -28px auto 0;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+    max-width: 480px;
+  }
+  .stat-chip {
+    flex: 1;
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    padding: 14px 8px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+  .stat-chip .num {
+    display: block;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1.2;
+  }
+  .stat-chip .label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  /* ── Month nav ── */
+  .month-nav {
+    display: flex;
+    gap: 6px;
+    padding: 20px 20px 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .month-nav::-webkit-scrollbar { display: none }
+  .month-nav a {
+    flex-shrink: 0;
+    padding: 7px 14px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-secondary);
+    background: var(--card);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .month-nav a.has-event {
+    color: var(--accent);
+    background: var(--accent-light);
+    border-color: rgba(59,91,219,0.2);
+  }
+  .month-nav a:active { transform: scale(0.96) }
+
+  /* ── Main content ── */
+  .calendar-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12px 20px 60px;
+  }
+
+  /* ── Month section ── */
+  .month-section {
+    margin-bottom: 28px;
+    scroll-margin-top: 12px;
+  }
+  .month-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-left: 4px;
+  }
+  .month-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .month-name {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .month-count {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+
+  /* Month color theming */
+  .month-2 .month-number  { background: var(--month-2); color: var(--month-2-accent) }
+  .month-2 .month-count   { background: var(--month-2); color: var(--month-2-accent) }
+  .month-3 .month-number  { background: var(--month-3); color: var(--month-3-accent) }
+  .month-3 .month-count   { background: var(--month-3); color: var(--month-3-accent) }
+  .month-5 .month-number  { background: var(--month-5); color: var(--month-5-accent) }
+  .month-5 .month-count   { background: var(--month-5); color: var(--month-5-accent) }
+  .month-6 .month-number  { background: var(--month-6); color: var(--month-6-accent) }
+  .month-6 .month-count   { background: var(--month-6); color: var(--month-6-accent) }
+  .month-8 .month-number  { background: var(--month-8); color: var(--month-8-accent) }
+  .month-8 .month-count   { background: var(--month-8); color: var(--month-8-accent) }
+  .month-10 .month-number { background: var(--month-10); color: var(--month-10-accent) }
+  .month-10 .month-count  { background: var(--month-10); color: var(--month-10-accent) }
+  .month-11 .month-number { background: var(--month-11); color: var(--month-11-accent) }
+  .month-11 .month-count  { background: var(--month-11); color: var(--month-11-accent) }
+  .month-12 .month-number { background: var(--month-12); color: var(--month-12-accent) }
+  .month-12 .month-count  { background: var(--month-12); color: var(--month-12-accent) }
+
+  /* ── Event card ── */
+  .event-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    transition: box-shadow 0.25s, transform 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .event-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+  }
+  .month-2 .event-card::before  { background: var(--month-2-badge) }
+  .month-3 .event-card::before  { background: var(--month-3-badge) }
+  .month-5 .event-card::before  { background: var(--month-5-badge) }
+  .month-6 .event-card::before  { background: var(--month-6-badge) }
+  .month-8 .event-card::before  { background: var(--month-8-badge) }
+  .month-10 .event-card::before { background: var(--month-10-badge) }
+  .month-11 .event-card::before { background: var(--month-11-badge) }
+  .month-12 .event-card::before { background: var(--month-12-badge) }
+
+  @media (hover: hover) {
+    .event-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+  }
+
+  .event-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .event-date svg { flex-shrink: 0 }
+
+  .event-title {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.45;
+    margin-bottom: 10px;
+    color: var(--text);
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .meta-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--bg);
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+  .meta-tag svg { flex-shrink: 0; opacity: 0.6 }
+
+  /* ── Empty month ── */
+  .empty-month {
+    text-align: center;
+    padding: 16px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 400;
+    opacity: 0.6;
+  }
+
+  /* ── No-event month (collapsed) ── */
+  .month-section.no-events {
+    opacity: 0.45;
+    margin-bottom: 12px;
+  }
+  .month-section.no-events .month-header {
+    margin-bottom: 0;
+  }
+
+  /* ── Timeline indicator ── */
+  .timeline-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+  .month-2  .timeline-dot { background: var(--month-2-badge) }
+  .month-3  .timeline-dot { background: var(--month-3-badge) }
+  .month-5  .timeline-dot { background: var(--month-5-badge) }
+  .month-6  .timeline-dot { background: var(--month-6-badge) }
+  .month-8  .timeline-dot { background: var(--month-8-badge) }
+  .month-10 .timeline-dot { background: var(--month-10-badge) }
+  .month-11 .timeline-dot { background: var(--month-11-badge) }
+  .month-12 .timeline-dot { background: var(--month-12-badge) }
+
+  /* ── Duration badge ── */
+  .duration-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-left: 4px;
+  }
+  .month-2  .duration-badge { background: var(--month-2);  color: var(--month-2-accent) }
+  .month-3  .duration-badge { background: var(--month-3);  color: var(--month-3-accent) }
+  .month-5  .duration-badge { background: var(--month-5);  color: var(--month-5-accent) }
+  .month-6  .duration-badge { background: var(--month-6);  color: var(--month-6-accent) }
+  .month-8  .duration-badge { background: var(--month-8);  color: var(--month-8-accent) }
+  .month-10 .duration-badge { background: var(--month-10); color: var(--month-10-accent) }
+  .month-11 .duration-badge { background: var(--month-11); color: var(--month-11-accent) }
+  .month-12 .duration-badge { background: var(--month-12); color: var(--month-12-accent) }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 24px 20px 40px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    opacity: 0.6;
+  }
+  .footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* ── Desktop tweaks ── */
+  @media (min-width: 768px) {
+    .hero { padding: 60px 40px 72px }
+    .hero h1 { font-size: 36px }
+    .hero p { font-size: 16px }
+    .stats { gap: 16px }
+    .stat-chip { padding: 18px 12px }
+    .stat-chip .num { font-size: 26px }
+    .calendar-wrap { padding: 16px 24px 80px }
+    .event-card { padding: 22px 24px }
+    .event-title { font-size: 16px }
+  }
+
+  /* ── Animation ── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px) }
+    to   { opacity: 1; transform: translateY(0) }
+  }
+  .month-section {
+    animation: fadeInUp 0.4s ease both;
+  }
+  .month-section:nth-child(2)  { animation-delay: 0.03s }
+  .month-section:nth-child(3)  { animation-delay: 0.06s }
+  .month-section:nth-child(4)  { animation-delay: 0.09s }
+  .month-section:nth-child(5)  { animation-delay: 0.12s }
+  .month-section:nth-child(6)  { animation-delay: 0.15s }
+  .month-section:nth-child(7)  { animation-delay: 0.18s }
+  .month-section:nth-child(8)  { animation-delay: 0.21s }
+  .month-section:nth-child(9)  { animation-delay: 0.24s }
+  .month-section:nth-child(10) { animation-delay: 0.27s }
+  .month-section:nth-child(11) { animation-delay: 0.30s }
+  .month-section:nth-child(12) { animation-delay: 0.33s }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    2026 시즌
+  </div>
+  <h1>민속씨름 대회 일정</h1>
+  <p>2026년 대한씨름협회 공식 대회 일정을 한눈에 확인하세요</p>
+</section>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="stat-chip">
+    <span class="num">8</span>
+    <span class="label">총 대회</span>
+  </div>
+  <div class="stat-chip">
+    <span class="num">7</span>
+    <span class="label">개최 지역</span>
+  </div>
+  <div class="stat-chip">
+    <span class="num">2~12</span>
+    <span class="label">월</span>
+  </div>
+</div>
+
+<!-- Month Nav -->
+<nav class="month-nav" aria-label="월별 바로가기">
+  <a href="#m1">1월</a>
+  <a href="#m2" class="has-event">2월</a>
+  <a href="#m3" class="has-event">3월</a>
+  <a href="#m4">4월</a>
+  <a href="#m5" class="has-event">5월</a>
+  <a href="#m6" class="has-event">6월</a>
+  <a href="#m7">7월</a>
+  <a href="#m8" class="has-event">8월</a>
+  <a href="#m9">9월</a>
+  <a href="#m10" class="has-event">10월</a>
+  <a href="#m11" class="has-event">11월</a>
+  <a href="#m12" class="has-event">12월</a>
+</nav>
+
+<!-- Calendar -->
+<main class="calendar-wrap">
+
+  <!-- 1월 -->
+  <section class="month-section month-1 no-events" id="m1">
+    <div class="month-header">
+      <div class="month-number">1</div>
+      <div class="month-name">1월</div>
+    </div>
+  </section>
+
+  <!-- 2월 -->
+  <section class="month-section month-2" id="m2">
+    <div class="month-header">
+      <div class="month-number">2</div>
+      <div class="month-name">2월</div>
+      <span class="month-count">1개 대회</span>
+    </div>
+    <div class="event-card">
+      <div class="event-date">
+        <span class="timeline-dot"></span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        2월 12일 ~ 2월 18일
+        <span class="duration-badge">7일간</span>
+      </div>
+      <div class="event-title">위더스제약 2026 태안설날장사씨름대회</div>
+      <div class="event-meta">
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          충남 태안군
+        </span>
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          태안종합실내체육관
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3월 -->
+  <section class="month-section month-3" id="m3">
+    <div class="month-header">
+      <div class="month-number">3</div>
+      <div class="month-name">3월</div>
+      <span class="month-count">1개 대회</span>
+    </div>
+    <div class="event-card">
+      <div class="event-date">
+        <span class="timeline-dot"></span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        3월 22일 ~ 3월 28일
+        <span class="duration-badge">7일간</span>
+      </div>
+      <div class="event-title">위더스제약 2026 민속씨름 단양온달장사씨름대회</div>
+      <div class="event-meta">
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          충북 단양군
+        </span>
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          단양체육관 동관
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4월 -->
+  <section class="month-section month-4 no-events" id="m4">
+    <div class="month-header">
+      <div class="month-number">4</div>
+      <div class="month-name">4월</div>
+    </div>
+  </section>
+
+  <!-- 5월 -->
+  <section class="month-section month-5" id="m5">
+    <div class="month-header">
+      <div class="month-number">5</div>
+      <div class="month-name">5월</div>
+      <span class="month-count">1개 대회</span>
+    </div>
+    <div class="event-card">
+      <div class="event-date">
+        <span class="timeline-dot"></span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        5월 8일 ~ 5월 14일
+        <span class="duration-badge">7일간</span>
+      </div>
+      <div class="event-title">위더스제약 2026 민속씨름 평창오대산천장사씨름대회</div>
+      <div class="event-meta">
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          강원 평창군
+        </span>
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          진부생활체육관
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6월 -->
+  <section class="month-section month-6" id="m6">
+    <div class="month-header">
+      <div class="month-number">6</div>
+      <div class="month-name">6월</div>
+      <span class="month-count">1개 대회</span>
+    </div>
+    <div class="event-card">
+      <div class="event-date">
+        <span class="timeline-dot"></span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        6월 8일 ~ 6월 14일
+        <span class="duration-badge">7일간</span>
+      </div>
+      <div class="event-title">위더스제약 2026 보은단오장사씨름대회 / 15회 씨름의 날</div>
+      <div class="event-meta">
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          충북 보은군
+        </span>
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          보은국민체육센터
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7월 -->
+  <section class="month-section month-7 no-events" id="m7">
+    <div class="month-header">
+      <div class="month-number">7</div>
+      <div class="month-name">7월</div>
+    </div>
+  </section>
+
+  <!-- 8월 -->
+  <section class="month-section month-8" id="m8">
+    <div class="month-header">
+      <div class="month-number">8</div>
+      <div class="month-name">8월</div>
+      <span class="month-count">1개 대회</span>
+    </div>
+    <div class="event-card">
+      <div class="event-date">
+        <span class="timeline-dot"></span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        8월 3일 ~ 8월 8일
+        <span class="duration-badge">6일간</span>
+      </div>
+      <div class="event-title">위더스제약 2026 민속씨름 문경오미자장사씨름대회</div>
+      <div class="event-meta">
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          경북 문경시
+        </span>
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          문경실내체육관
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9월 -->
+  <section class="month-section month-9 no-events" id="m9">
+    <div class="month-header">
+      <div class="month-number">9</div>
+      <div class="month-name">9월</div>
+    </div>
+  </section>
+
+  <!-- 10월 -->
+  <section class="month-section month-10" id="m10">
+    <div class="month-header">
+      <div class="month-number">10</div>
+      <div class="month-name">10월</div>
+      <span class="month-count">2개 대회</span>
+    </div>
+    <div class="event-card">
+      <div class="event-date">
+        <span class="timeline-dot"></span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        10월 5일 ~ 10월 11일
+        <span class="duration-badge">7일간</span>
+      </div>
+      <div class="event-title">위더스제약 2026 괴산추석장사씨름대회</div>
+      <div class="event-meta">
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          충북 괴산군
+        </span>
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          괴산문화체육센터
+        </span>
+      </div>
+    </div>
+    <div class="event-card">
+      <div class="event-date">
+        <span class="timeline-dot"></span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        10월 31일 ~ 11월 6일
+        <span class="duration-badge">7일간</span>
+      </div>
+      <div class="event-title">위더스제약 2026 민속씨름 안산김홍도장사씨름대회</div>
+      <div class="event-meta">
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          경기 안산시
+        </span>
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          와동체육관
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11월 -->
+  <section class="month-section month-11" id="m11">
+    <div class="month-header">
+      <div class="month-number">11</div>
+      <div class="month-name">11월</div>
+      <span class="month-count">1개 대회</span>
+    </div>
+    <div class="event-card">
+      <div class="event-date">
+        <span class="timeline-dot"></span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        11월 30일 ~ 12월 6일
+        <span class="duration-badge">7일간</span>
+      </div>
+      <div class="event-title">위더스제약 2026 천하장사씨름대축제</div>
+      <div class="event-meta">
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          전남 영암군
+        </span>
+        <span class="meta-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          영암체육관
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12월 -->
+  <section class="month-section month-12 no-events" id="m12">
+    <div class="month-header">
+      <div class="month-number">12</div>
+      <div class="month-name">12월</div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>출처: <a href="https://kpso.co.kr/ksa/Schedule/YearSchedule" target="_blank" rel="noopener">대한씨름협회</a> (kpso.co.kr)</p>
+</footer>
+
+</body>
+</html>

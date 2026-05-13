@@ -1,21 +1,20 @@
 {
   "bundleVersion": 1,
-  "createdAt": "2026-05-13T07:42:24.536Z",
+  "createdAt": "2026-05-13T07:42:43.551Z",
   "sessionId": "ses_01907cc2-3464-4a18-8112-0ba6b028ff8c",
   "git": {
-    "head": "ff47aca",
+    "head": "535e0de",
     "branch": "test",
     "diffFiles": 0,
-    "untrackedFiles": 1
+    "untrackedFiles": 0
   },
-  "fallback": "git-listed",
+  "fallback": "full-workspace",
   "workspaceFiles": [
-    "/workspace/.sisyphus/opencode-project-id",
-    "/workspace/.sisyphus"
+    "/workspace"
   ],
   "extras": {
     "opencodeData": true,
     "netlog": false
   },
-  "fileCount": 3
+  "fileCount": 2
 }

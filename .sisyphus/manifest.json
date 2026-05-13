@@ -1,0 +1,21 @@
+{
+  "bundleVersion": 1,
+  "createdAt": "2026-05-13T07:42:24.536Z",
+  "sessionId": "ses_01907cc2-3464-4a18-8112-0ba6b028ff8c",
+  "git": {
+    "head": "ff47aca",
+    "branch": "test",
+    "diffFiles": 0,
+    "untrackedFiles": 1
+  },
+  "fallback": "git-listed",
+  "workspaceFiles": [
+    "/workspace/.sisyphus/opencode-project-id",
+    "/workspace/.sisyphus"
+  ],
+  "extras": {
+    "opencodeData": true,
+    "netlog": false
+  },
+  "fileCount": 3
+}

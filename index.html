@@ -752,25 +752,17 @@
       html += '<span class="day-number">' + d + '</span>';
 
       if (hasEv) {
-        // Show event bars (deduplicated per day)
         var shown = {};
         dayEvents[d].forEach(function(e) {
           if (shown[e.title]) return;
           shown[e.title] = true;
           var evColor = monthColors[e.startMonth] || colors;
-
-          // Determine if this is the start day of the event in this month
-          var isStartInMonth = (e.startMonth === month1 && d === e.startDay);
-          var isFirstDay = (d === 1 && e.startMonth < month1);
-
-          if (isStartInMonth || isFirstDay) {
-            html += '<div class="event-bar" ' +
-              'style="background:' + evColor.bg + ';color:' + evColor.accent + ';" ' +
-              'data-event-title="' + e.title.replace(/"/g, '&quot;') + '" ' +
-              'title="' + e.title + '">' +
-              shortName(e.title) +
-              '</div>';
-          }
+          html += '<div class="event-bar" ' +
+            'style="background:' + evColor.bg + ';color:' + evColor.accent + ';" ' +
+            'data-event-title="' + e.title.replace(/"/g, '&quot;') + '" ' +
+            'title="' + e.title + '">' +
+            shortName(e.title) +
+            '</div>';
         });
       }
 

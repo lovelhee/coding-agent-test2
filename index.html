@@ -22,18 +22,10 @@
     --shadow-hover: 0 8px 32px rgba(59,91,219,0.12);
     --radius: 16px;
     --radius-sm: 10px;
-    --month-1: #e8f5e9; --month-1-accent: #2e7d32; --month-1-badge: #43a047;
-    --month-2: #e3f2fd; --month-2-accent: #1565c0; --month-2-badge: #1e88e5;
-    --month-3: #fce4ec; --month-3-accent: #c62828; --month-3-badge: #e53935;
-    --month-4: #fff3e0; --month-4-accent: #e65100; --month-4-badge: #fb8c00;
-    --month-5: #e8eaf6; --month-5-accent: #283593; --month-5-badge: #3f51b5;
-    --month-6: #e0f7fa; --month-6-accent: #00695c; --month-6-badge: #00897b;
-    --month-7: #fbe9e7; --month-7-accent: #bf360c; --month-7-badge: #f4511e;
-    --month-8: #f3e5f5; --month-8-accent: #6a1b9a; --month-8-badge: #8e24aa;
-    --month-9: #e8f5e9; --month-9-accent: #2e7d32; --month-9-badge: #43a047;
-    --month-10: #fff8e1; --month-10-accent: #f57f17; --month-10-badge: #fbc02d;
-    --month-11: #e3f2fd; --month-11-accent: #0d47a1; --month-11-badge: #1976d2;
-    --month-12: #efebe9; --month-12-accent: #4e342e; --month-12-badge: #6d4c41;
+    --cell-h: 80px;
+    --day-num-h: 24px;
+    --bar-h: 20px;
+    --bar-gap: 2px;
   }
 
   html { scroll-behavior: smooth }
@@ -243,67 +235,68 @@
     color: var(--text-secondary);
     letter-spacing: 0.04em;
   }
-  .calendar-weekday:first-child { color: #e53935; }
-  .calendar-weekday:last-child { color: #1e88e5; }
+  .calendar-weekday.sun { color: #e53935; }
+  .calendar-weekday.sat { color: #1e88e5; }
 
-  .calendar-days {
+  /* ── Week row: relative container for spanning bars ── */
+  .week-row {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    position: relative;
   }
 
   .calendar-day {
-    min-height: 72px;
-    padding: 4px;
+    height: var(--cell-h);
     border-right: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     position: relative;
     transition: background 0.15s;
+    overflow: hidden;
   }
-  .calendar-day:nth-child(7n) { border-right: none; }
-  .calendar-day.empty {
-    background: #fafbfe;
-  }
+  .calendar-day:nth-child(7) { border-right: none; }
+  .calendar-day.empty { background: #fafbfe; }
   .calendar-day .day-number {
     display: block;
     font-size: 13px;
     font-weight: 600;
-    padding: 2px 6px;
+    padding: 4px 6px 0;
     line-height: 1.4;
     color: var(--text);
+    height: var(--day-num-h);
   }
-  .calendar-day:nth-child(7n+1) .day-number { color: #e53935; }
-  .calendar-day:nth-child(7n) .day-number { color: #1e88e5; }
-  .calendar-day.today .day-number {
+  .calendar-day.sun .day-number { color: #e53935; }
+  .calendar-day.sat .day-number { color: #1e88e5; }
+  .calendar-day.today .day-number span {
     background: var(--accent);
     color: #fff;
-    border-radius: 8px;
-    display: inline-block;
+    border-radius: 6px;
+    padding: 1px 6px;
   }
-  .calendar-day.has-event {
-    cursor: pointer;
-  }
-  .calendar-day.has-event:hover {
-    background: rgba(59, 91, 219, 0.03);
-  }
+  .calendar-day.has-event { cursor: pointer; }
+  .calendar-day.has-event:hover { background: rgba(59,91,219,0.03); }
 
-  /* ── Event bars on calendar day ── */
-  .event-bar {
-    display: block;
+  /* ── Spanning event bar (absolute over week row) ── */
+  .event-span {
+    position: absolute;
+    height: var(--bar-h);
+    border-radius: 4px;
     font-size: 10px;
     font-weight: 600;
-    line-height: 1.3;
-    padding: 2px 5px;
-    margin: 1px 0;
-    border-radius: 4px;
+    line-height: var(--bar-h);
+    padding: 0 6px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     cursor: pointer;
     transition: filter 0.15s;
+    z-index: 2;
+    pointer-events: auto;
   }
-  .event-bar:hover {
-    filter: brightness(0.92);
-  }
+  .event-span:hover { filter: brightness(0.88); }
+  .event-span.span-start { border-radius: 4px 0 0 4px; }
+  .event-span.span-end { border-radius: 0 4px 4px 0; }
+  .event-span.span-mid { border-radius: 0; }
+  .event-span.span-full { border-radius: 4px; }
 
   /* ── Event detail modal ── */
   .modal-overlay {
@@ -405,15 +398,6 @@
     margin-top: 4px;
   }
 
-  /* ── Event count indicator for months ── */
-  .month-event-count {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    text-align: center;
-    padding: 4px 0 0;
-  }
-
   /* ── Footer ── */
   .footer {
     text-align: center;
@@ -435,17 +419,17 @@
     .stats { gap: 16px }
     .stat-chip { padding: 18px 12px }
     .stat-chip .num { font-size: 26px }
-    .calendar-day { min-height: 90px; padding: 6px; }
-    .calendar-day .day-number { font-size: 14px; padding: 3px 8px; }
-    .event-bar { font-size: 11px; padding: 3px 6px; }
+    :root { --cell-h: 92px; --bar-h: 22px; }
+    .calendar-day .day-number { font-size: 14px; }
+    .event-span { font-size: 11px; }
     .month-nav-title { font-size: 24px; min-width: 160px; }
   }
 
   /* ── Mobile compact ── */
   @media (max-width: 480px) {
-    .calendar-day { min-height: 56px; padding: 2px; }
-    .calendar-day .day-number { font-size: 11px; padding: 1px 4px; }
-    .event-bar { font-size: 9px; padding: 1px 3px; }
+    :root { --cell-h: 62px; --bar-h: 16px; --day-num-h: 20px; }
+    .calendar-day .day-number { font-size: 11px; padding: 2px 4px 0; }
+    .event-span { font-size: 8px; padding: 0 3px; }
     .calendar-weekday { font-size: 11px; padding: 10px 2px; }
     .month-nav-title { font-size: 18px; min-width: 120px; }
     .modal-card { border-radius: 14px; }
@@ -530,80 +514,22 @@
 (function() {
   'use strict';
 
-  // ── Event data ──
-  const events = [
-    {
-      title: '위더스제약 2026 태안설날장사씨름대회',
-      startMonth: 2, startDay: 12,
-      endMonth: 2, endDay: 18,
-      location: '충남 태안군',
-      venue: '태안종합실내체육관',
-      days: 7
-    },
-    {
-      title: '위더스제약 2026 민속씨름 단양온달장사씨름대회',
-      startMonth: 3, startDay: 22,
-      endMonth: 3, endDay: 28,
-      location: '충북 단양군',
-      venue: '단양체육관 동관',
-      days: 7
-    },
-    {
-      title: '위더스제약 2026 민속씨름 평창오대산천장사씨름대회',
-      startMonth: 5, startDay: 8,
-      endMonth: 5, endDay: 14,
-      location: '강원 평창군',
-      venue: '진부생활체육관',
-      days: 7
-    },
-    {
-      title: '위더스제약 2026 보은단오장사씨름대회 / 15회 씨름의 날',
-      startMonth: 6, startDay: 8,
-      endMonth: 6, endDay: 14,
-      location: '충북 보은군',
-      venue: '보은국민체육센터',
-      days: 7
-    },
-    {
-      title: '위더스제약 2026 민속씨름 문경오미자장사씨름대회',
-      startMonth: 8, startDay: 3,
-      endMonth: 8, endDay: 8,
-      location: '경북 문경시',
-      venue: '문경실내체육관',
-      days: 6
-    },
-    {
-      title: '위더스제약 2026 괴산추석장사씨름대회',
-      startMonth: 10, startDay: 5,
-      endMonth: 10, endDay: 11,
-      location: '충북 괴산군',
-      venue: '괴산문화체육센터',
-      days: 7
-    },
-    {
-      title: '위더스제약 2026 민속씨름 안산김홍도장사씨름대회',
-      startMonth: 10, startDay: 31,
-      endMonth: 11, endDay: 6,
-      location: '경기 안산시',
-      venue: '와동체육관',
-      days: 7
-    },
-    {
-      title: '위더스제약 2026 천하장사씨름대축제',
-      startMonth: 11, startDay: 30,
-      endMonth: 12, endDay: 6,
-      location: '전남 영암군',
-      venue: '영암체육관',
-      days: 7
-    }
+  var events = [
+    { title: '위더스제약 2026 태안설날장사씨름대회', startMonth: 2, startDay: 12, endMonth: 2, endDay: 18, location: '충남 태안군', venue: '태안종합실내체육관', days: 7 },
+    { title: '위더스제약 2026 민속씨름 단양온달장사씨름대회', startMonth: 3, startDay: 22, endMonth: 3, endDay: 28, location: '충북 단양군', venue: '단양체육관 동관', days: 7 },
+    { title: '위더스제약 2026 민속씨름 평창오대산천장사씨름대회', startMonth: 5, startDay: 8, endMonth: 5, endDay: 14, location: '강원 평창군', venue: '진부생활체육관', days: 7 },
+    { title: '위더스제약 2026 보은단오장사씨름대회 / 15회 씨름의 날', startMonth: 6, startDay: 8, endMonth: 6, endDay: 14, location: '충북 보은군', venue: '보은국민체육센터', days: 7 },
+    { title: '위더스제약 2026 민속씨름 문경오미자장사씨름대회', startMonth: 8, startDay: 3, endMonth: 8, endDay: 8, location: '경북 문경시', venue: '문경실내체육관', days: 6 },
+    { title: '위더스제약 2026 괴산추석장사씨름대회', startMonth: 10, startDay: 5, endMonth: 10, endDay: 11, location: '충북 괴산군', venue: '괴산문화체육센터', days: 7 },
+    { title: '위더스제약 2026 민속씨름 안산김홍도장사씨름대회', startMonth: 10, startDay: 31, endMonth: 11, endDay: 6, location: '경기 안산시', venue: '와동체육관', days: 7 },
+    { title: '위더스제약 2026 천하장사씨름대축제', startMonth: 11, startDay: 30, endMonth: 12, endDay: 6, location: '전남 영암군', venue: '영암체육관', days: 7 }
   ];
 
-  const YEAR = 2026;
-  const MONTH_NAMES = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-  const WEEKDAYS = ['일','월','화','수','목','금','토'];
+  var YEAR = 2026;
+  var MONTH_NAMES = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  var WEEKDAYS = ['일','월','화','수','목','금','토'];
 
-  // Month color map
-  const monthColors = {
+  var monthColors = {
     1:  { bg: '#e8f5e9', accent: '#2e7d32', badge: '#43a047' },
     2:  { bg: '#e3f2fd', accent: '#1565c0', badge: '#1e88e5' },
     3:  { bg: '#fce4ec', accent: '#c62828', badge: '#e53935' },
@@ -618,65 +544,51 @@
     12: { bg: '#efebe9', accent: '#4e342e', badge: '#6d4c41' }
   };
 
-  let currentMonth = new Date().getMonth(); // 0-based
+  var currentMonth = 1;
 
-  // Check if a month has events
   function monthHasEvents(m) {
-    const month1 = m + 1; // 1-based
+    var month1 = m + 1;
     return events.some(function(e) {
       return (e.startMonth === month1 || e.endMonth === month1) ||
              (e.startMonth < month1 && e.endMonth > month1);
     });
   }
 
-  // Get events for a specific month
   function getEventsForMonth(m) {
-    const month1 = m + 1; // 1-based
+    var month1 = m + 1;
     return events.filter(function(e) {
       return (e.startMonth === month1 || e.endMonth === month1) ||
              (e.startMonth < month1 && e.endMonth > month1);
     });
   }
 
-  // Get days in month
   function daysInMonth(year, month0) {
     return new Date(year, month0 + 1, 0).getDate();
   }
 
-  // Get first day of week (0=Sun)
   function firstDayOfMonth(year, month0) {
     return new Date(year, month0, 1).getDay();
   }
 
-  // Format date range
   function formatDateRange(e) {
-    var s = e.startMonth + '월 ' + e.startDay + '일';
-    var end = e.endMonth + '월 ' + e.endDay + '일';
-    return s + ' ~ ' + end;
+    return e.startMonth + '월 ' + e.startDay + '일 ~ ' + e.endMonth + '월 ' + e.endDay + '일';
   }
 
-  // Short event name for bar
   function shortName(title) {
-    // Extract the tournament name part after the year
     var m = title.match(/2026\s*(?:민속씨름\s*)?(.+)/);
-    if (m) return m[1];
-    return title;
+    return m ? m[1] : title;
   }
 
-  // Render month pills
   function renderPills() {
     var container = document.getElementById('monthPills');
     var html = '';
     for (var i = 0; i < 12; i++) {
-      var hasEv = monthHasEvents(i);
-      var isActive = i === currentMonth;
       var cls = 'month-pill';
-      if (hasEv) cls += ' has-event';
-      if (isActive) cls += ' active';
+      if (monthHasEvents(i)) cls += ' has-event';
+      if (i === currentMonth) cls += ' active';
       html += '<button class="' + cls + '" data-month="' + i + '">' + MONTH_NAMES[i] + '</button>';
     }
     container.innerHTML = html;
-
     container.querySelectorAll('.month-pill').forEach(function(btn) {
       btn.addEventListener('click', function() {
         currentMonth = parseInt(this.dataset.month);
@@ -685,108 +597,181 @@
     });
   }
 
-  // Render calendar
   function renderCalendar() {
     var grid = document.getElementById('calendarGrid');
     var month0 = currentMonth;
     var month1 = month0 + 1;
     var totalDays = daysInMonth(YEAR, month0);
-    var startDay = firstDayOfMonth(YEAR, month0);
-    var colors = monthColors[month1];
+    var startDow = firstDayOfMonth(YEAR, month0);
 
     var today = new Date();
     var todayDay = (today.getFullYear() === YEAR && today.getMonth() === month0) ? today.getDate() : -1;
 
-    // Get events for this month
-    var monthEvents = getEventsForMonth(month0);
+    var monthEvts = getEventsForMonth(month0);
 
-    // Build day-to-events map
-    var dayEvents = {};
-    monthEvents.forEach(function(e) {
-      var dayStart, dayEnd;
-      if (e.startMonth === month1 && e.endMonth === month1) {
-        dayStart = e.startDay;
-        dayEnd = e.endDay;
-      } else if (e.startMonth === month1 && e.endMonth > month1) {
-        dayStart = e.startDay;
-        dayEnd = totalDays;
-      } else if (e.startMonth < month1 && e.endMonth === month1) {
-        dayStart = 1;
-        dayEnd = e.endDay;
-      } else {
-        dayStart = 1;
-        dayEnd = totalDays;
-      }
-      for (var d = dayStart; d <= dayEnd; d++) {
-        if (!dayEvents[d]) dayEvents[d] = [];
-        dayEvents[d].push(e);
+    // For each event, compute its day range within this month
+    var evtRanges = [];
+    monthEvts.forEach(function(e, idx) {
+      var ds, de;
+      if (e.startMonth === month1 && e.endMonth === month1) { ds = e.startDay; de = e.endDay; }
+      else if (e.startMonth === month1 && e.endMonth > month1) { ds = e.startDay; de = totalDays; }
+      else if (e.startMonth < month1 && e.endMonth === month1) { ds = 1; de = e.endDay; }
+      else { ds = 1; de = totalDays; }
+      evtRanges.push({ event: e, dayStart: ds, dayEnd: de, idx: idx });
+    });
+
+    // Build day-to-events map for click detection
+    var dayEventsMap = {};
+    evtRanges.forEach(function(r) {
+      for (var d = r.dayStart; d <= r.dayEnd; d++) {
+        if (!dayEventsMap[d]) dayEventsMap[d] = [];
+        dayEventsMap[d].push(r.event);
       }
     });
 
+    // Build weeks: array of arrays, each inner array = 7 cells
+    var weeks = [];
+    var cells = [];
+
+    // Leading empties
+    for (var i = 0; i < startDow; i++) cells.push(null);
+    for (var d = 1; d <= totalDays; d++) cells.push(d);
+    // Trailing empties
+    while (cells.length % 7 !== 0) cells.push(null);
+
+    for (var i = 0; i < cells.length; i += 7) {
+      weeks.push(cells.slice(i, i + 7));
+    }
+
+    // For each event range, split into per-week segments
+    // Each segment: { event, colStart (0-6), colEnd (0-6), weekIdx, isStart, isEnd }
+    var weekSegments = weeks.map(function() { return []; });
+
+    evtRanges.forEach(function(r) {
+      for (var wi = 0; wi < weeks.length; wi++) {
+        var week = weeks[wi];
+        var weekDayStart = null, weekDayEnd = null;
+        var colStart = -1, colEnd = -1;
+
+        for (var ci = 0; ci < 7; ci++) {
+          var dayVal = week[ci];
+          if (dayVal !== null && dayVal >= r.dayStart && dayVal <= r.dayEnd) {
+            if (colStart === -1) { colStart = ci; weekDayStart = dayVal; }
+            colEnd = ci;
+            weekDayEnd = dayVal;
+          }
+        }
+
+        if (colStart !== -1) {
+          var isRangeStart = (weekDayStart === r.dayStart && r.event.startMonth === month1);
+          var isRangeEnd = (weekDayEnd === r.dayEnd && r.event.endMonth === month1);
+          // For cross-month events continuing from previous month
+          var isVeryStart = (weekDayStart === r.dayStart);
+          var isVeryEnd = (weekDayEnd === r.dayEnd);
+
+          weekSegments[wi].push({
+            event: r.event,
+            colStart: colStart,
+            colEnd: colEnd,
+            isStart: isVeryStart,
+            isEnd: isVeryEnd
+          });
+        }
+      }
+    });
+
+    // Render HTML
     var html = '';
 
     // Weekday headers
     html += '<div class="calendar-weekdays">';
-    WEEKDAYS.forEach(function(w) {
-      html += '<div class="calendar-weekday">' + w + '</div>';
+    WEEKDAYS.forEach(function(w, i) {
+      var cls = 'calendar-weekday';
+      if (i === 0) cls += ' sun';
+      if (i === 6) cls += ' sat';
+      html += '<div class="' + cls + '">' + w + '</div>';
     });
     html += '</div>';
 
-    // Days grid
-    html += '<div class="calendar-days">';
+    // Week rows
+    weeks.forEach(function(week, wi) {
+      html += '<div class="week-row">';
 
-    // Empty cells before first day
-    for (var i = 0; i < startDay; i++) {
-      html += '<div class="calendar-day empty"></div>';
-    }
+      // Day cells
+      week.forEach(function(dayVal, ci) {
+        var cls = 'calendar-day';
+        if (dayVal === null) cls += ' empty';
+        if (dayVal === todayDay) cls += ' today';
+        if (ci === 0) cls += ' sun';
+        if (ci === 6) cls += ' sat';
+        if (dayVal !== null && dayEventsMap[dayVal]) cls += ' has-event';
 
-    // Day cells
-    for (var d = 1; d <= totalDays; d++) {
-      var isToday = d === todayDay;
-      var hasEv = dayEvents[d] && dayEvents[d].length > 0;
-      var cls = 'calendar-day';
-      if (isToday) cls += ' today';
-      if (hasEv) cls += ' has-event';
+        html += '<div class="' + cls + '"';
+        if (dayVal !== null) html += ' data-day="' + dayVal + '"';
+        html += '>';
 
-      html += '<div class="' + cls + '">';
-      html += '<span class="day-number">' + d + '</span>';
+        if (dayVal !== null) {
+          if (dayVal === todayDay) {
+            html += '<span class="day-number"><span>' + dayVal + '</span></span>';
+          } else {
+            html += '<span class="day-number">' + dayVal + '</span>';
+          }
+        }
 
-      if (hasEv) {
-        var shown = {};
-        dayEvents[d].forEach(function(e) {
-          if (shown[e.title]) return;
-          shown[e.title] = true;
-          var evColor = monthColors[e.startMonth] || colors;
-          html += '<div class="event-bar" ' +
-            'style="background:' + evColor.bg + ';color:' + evColor.accent + ';" ' +
-            'data-event-title="' + e.title.replace(/"/g, '&quot;') + '" ' +
-            'title="' + e.title + '">' +
-            shortName(e.title) +
-            '</div>';
-        });
-      }
+        html += '</div>';
+      });
+
+      // Event span bars (absolute-positioned over the week row)
+      var segs = weekSegments[wi];
+      // Assign vertical slots to avoid overlaps
+      var slotMap = []; // array of arrays, each sub-array = one slot's occupied columns
+      segs.forEach(function(seg) {
+        var slot = -1;
+        for (var s = 0; s < slotMap.length; s++) {
+          var conflict = false;
+          for (var c = seg.colStart; c <= seg.colEnd; c++) {
+            if (slotMap[s][c]) { conflict = true; break; }
+          }
+          if (!conflict) { slot = s; break; }
+        }
+        if (slot === -1) { slot = slotMap.length; slotMap.push({}); }
+        for (var c = seg.colStart; c <= seg.colEnd; c++) slotMap[slot][c] = true;
+        seg.slot = slot;
+      });
+
+      segs.forEach(function(seg) {
+        var evColor = monthColors[seg.event.startMonth];
+        var leftPct = (seg.colStart / 7 * 100).toFixed(4);
+        var widthPct = ((seg.colEnd - seg.colStart + 1) / 7 * 100).toFixed(4);
+        var topPx = 'calc(var(--day-num-h) + ' + seg.slot + ' * (var(--bar-h) + var(--bar-gap)))';
+
+        var shapeCls = 'event-span';
+        if (seg.isStart && seg.isEnd) shapeCls += ' span-full';
+        else if (seg.isStart) shapeCls += ' span-start';
+        else if (seg.isEnd) shapeCls += ' span-end';
+        else shapeCls += ' span-mid';
+
+        var label = seg.isStart ? shortName(seg.event.title) : '';
+
+        html += '<div class="' + shapeCls + '" ' +
+          'style="left:' + leftPct + '%;width:' + widthPct + '%;top:' + topPx + ';' +
+          'background:' + evColor.bg + ';color:' + evColor.accent + ';" ' +
+          'data-event-title="' + seg.event.title.replace(/"/g, '&quot;') + '" ' +
+          'title="' + seg.event.title + '">' +
+          label +
+          '</div>';
+      });
 
       html += '</div>';
-    }
-
-    // Trailing empty cells
-    var totalCells = startDay + totalDays;
-    var remainder = totalCells % 7;
-    if (remainder > 0) {
-      for (var i = 0; i < 7 - remainder; i++) {
-        html += '<div class="calendar-day empty"></div>';
-      }
-    }
-
-    html += '</div>';
+    });
 
     grid.innerHTML = html;
     grid.style.animation = 'none';
-    grid.offsetHeight; // reflow
+    grid.offsetHeight;
     grid.style.animation = 'fadeInUp 0.35s ease both';
 
-    // Add click listeners to event bars
-    grid.querySelectorAll('.event-bar').forEach(function(bar) {
+    // Click listeners on event spans
+    grid.querySelectorAll('.event-span').forEach(function(bar) {
       bar.addEventListener('click', function(ev) {
         ev.stopPropagation();
         var title = this.dataset.eventTitle;
@@ -795,26 +780,17 @@
       });
     });
 
-    // Add click listeners to days with events
+    // Click listeners on day cells
     grid.querySelectorAll('.calendar-day.has-event').forEach(function(cell) {
       cell.addEventListener('click', function() {
-        var bar = this.querySelector('.event-bar');
-        if (bar) {
-          var title = bar.dataset.eventTitle;
-          var event = events.find(function(e) { return e.title === title; });
-          if (event) openModal(event);
-        } else {
-          // Find event for this day
-          var dayNum = parseInt(this.querySelector('.day-number').textContent);
-          if (dayEvents[dayNum] && dayEvents[dayNum].length > 0) {
-            openModal(dayEvents[dayNum][0]);
-          }
+        var dayNum = parseInt(this.dataset.day);
+        if (dayEventsMap[dayNum] && dayEventsMap[dayNum].length > 0) {
+          openModal(dayEventsMap[dayNum][0]);
         }
       });
     });
   }
 
-  // Open event detail modal
   function openModal(event) {
     var overlay = document.getElementById('modalOverlay');
     var evColor = monthColors[event.startMonth];
@@ -824,32 +800,24 @@
 
     var bodyHTML = '';
 
-    // Date
     bodyHTML += '<div class="modal-info">' +
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
       '<div class="modal-info-text"><strong>' + formatDateRange(event) + '</strong>' +
-      '<br><span class="modal-duration" style="background:' + evColor.bg + ';color:' + evColor.accent + ';">' + event.days + '일간</span></div>' +
-      '</div>';
+      '<br><span class="modal-duration" style="background:' + evColor.bg + ';color:' + evColor.accent + ';">' + event.days + '일간</span></div></div>';
 
-    // Location
     bodyHTML += '<div class="modal-info">' +
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
-      '<div class="modal-info-text"><strong>' + event.location + '</strong></div>' +
-      '</div>';
+      '<div class="modal-info-text"><strong>' + event.location + '</strong></div></div>';
 
-    // Venue
     bodyHTML += '<div class="modal-info">' +
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>' +
-      '<div class="modal-info-text"><strong>' + event.venue + '</strong></div>' +
-      '</div>';
+      '<div class="modal-info-text"><strong>' + event.venue + '</strong></div></div>';
 
     document.getElementById('modalBody').innerHTML = bodyHTML;
-
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
 
-  // Close modal
   function closeModal() {
     document.getElementById('modalOverlay').classList.remove('active');
     document.body.style.overflow = '';
@@ -863,7 +831,6 @@
     if (e.key === 'Escape') closeModal();
   });
 
-  // Navigation
   document.getElementById('prevMonth').addEventListener('click', function() {
     currentMonth = (currentMonth - 1 + 12) % 12;
     render();
@@ -873,53 +840,35 @@
     render();
   });
 
-  // Touch swipe support
   (function() {
     var startX = 0;
-    var grid = document.getElementById('calendarGrid');
-    grid.addEventListener('touchstart', function(e) {
+    var gridEl = document.getElementById('calendarGrid');
+    gridEl.addEventListener('touchstart', function(e) {
       startX = e.touches[0].clientX;
     }, { passive: true });
-    grid.addEventListener('touchend', function(e) {
+    gridEl.addEventListener('touchend', function(e) {
       var diffX = e.changedTouches[0].clientX - startX;
       if (Math.abs(diffX) > 60) {
-        if (diffX > 0) {
-          currentMonth = (currentMonth - 1 + 12) % 12;
-        } else {
-          currentMonth = (currentMonth + 1) % 12;
-        }
+        currentMonth = diffX > 0 ? (currentMonth - 1 + 12) % 12 : (currentMonth + 1) % 12;
         render();
       }
     }, { passive: true });
   })();
 
-  // Keyboard navigation
   document.addEventListener('keydown', function(e) {
     if (document.getElementById('modalOverlay').classList.contains('active')) return;
-    if (e.key === 'ArrowLeft') {
-      currentMonth = (currentMonth - 1 + 12) % 12;
-      render();
-    } else if (e.key === 'ArrowRight') {
-      currentMonth = (currentMonth + 1) % 12;
-      render();
-    }
+    if (e.key === 'ArrowLeft') { currentMonth = (currentMonth - 1 + 12) % 12; render(); }
+    else if (e.key === 'ArrowRight') { currentMonth = (currentMonth + 1) % 12; render(); }
   });
 
-  // Main render
   function render() {
     document.getElementById('monthTitle').textContent = YEAR + '년 ' + MONTH_NAMES[currentMonth];
     renderPills();
     renderCalendar();
   }
 
-  // Initialize - start at earliest event month (February) or current month if in 2026
   var now = new Date();
-  if (now.getFullYear() === YEAR) {
-    currentMonth = now.getMonth();
-  } else {
-    currentMonth = 1; // February (0-based) - first event month
-  }
-
+  currentMonth = (now.getFullYear() === YEAR) ? now.getMonth() : 1;
   render();
 })();
 </script>
